@@ -1,33 +1,41 @@
-exports.handler = async (event, context) => {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method Not Allowed. Use POST." })
-    };
-  }
-
-  let data;
+exports.handler = async (event) => {
   try {
-    data = JSON.parse(event.body);
-  } catch (err) {
+    // Parse incoming JSON from orchestrator
+    const body = JSON.parse(event.body);
+
+    // Expecting: { medallionId: "...", storageUrl: "...", caption: "..." }
+    const { medallionId, storageUrl, caption } = body;
+
+    // PHASE 1 PLACEHOLDER:
+    // Instead of writing to Supabase, we simulate a successful database update.
+    const fakeDbResponse = {
+      medallionId,
+      storageUrl,
+      caption,
+      updatedAt: new Date().toISOString()
+    };
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Invalid JSON body" })
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: true,
+        message: "Medallion updated successfully (placeholder).",
+        data: fakeDbResponse
+      })
+    };
+
+  } catch (error) {
+    console.error("update-medallion error:", error);
+
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: false,
+        error: "Medallion update failed.",
+        details: error.message
+      })
     };
   }
-
-  // Simulated medallion update
-  const updatedMedallion = {
-    medallionId: data.medallionId || "unknown",
-    updatedFields: data.fields || {},
-    timestamp: new Date().toISOString()
-  };
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Medallion updated successfully (simulated).",
-      medallion: updatedMedallion
-    })
-  };
 };
