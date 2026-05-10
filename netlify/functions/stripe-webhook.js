@@ -1,28 +1,40 @@
-exports.handler = async (event, context) => {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method Not Allowed. Use POST." })
-    };
-  }
-
-  // Stripe sends raw JSON — we just echo it back for now
-  let data;
+exports.handler = async (event) => {
   try {
-    data = JSON.parse(event.body);
-  } catch (err) {
+    // Stripe sends raw body, but for Phase 1 placeholder we parse JSON normally
+    const body = JSON.parse(event.body);
+
+    console.log("Received Stripe webhook event (placeholder):", body);
+
+    // PHASE 1 PLACEHOLDER:
+    // We pretend the payment was successful and return a confirmation.
+    const fakePaymentConfirmation = {
+      paymentStatus: "succeeded",
+      amount: body.amount || "unknown",
+      medallionId: body.medallionId || "unknown",
+      timestamp: new Date().toISOString()
+    };
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Invalid JSON body" })
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: true,
+        message: "Stripe webhook processed successfully (placeholder).",
+        data: fakePaymentConfirmation
+      })
+    };
+
+  } catch (error) {
+    console.error("stripe-webhook error:", error);
+
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: false,
+        error: "Stripe webhook failed.",
+        details: error.message
+      })
     };
   }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "stripe-webhook.js received your event!",
-      eventType: data.type || "unknown",
-      raw: data
-    })
-  };
 };
