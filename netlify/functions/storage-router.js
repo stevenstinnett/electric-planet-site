@@ -1,26 +1,37 @@
-exports.handler = async (event, context) => {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method Not Allowed. Use POST." })
-    };
-  }
-
-  let data;
+exports.handler = async (event) => {
   try {
-    data = JSON.parse(event.body);
-  } catch (err) {
+    // Parse incoming JSON from orchestrator
+    const body = JSON.parse(event.body);
+
+    // Expecting: { filename: "...", filetype: "...", filedata: "base64string" }
+    const { filename, filetype } = body;
+
+    // PHASE 1 PLACEHOLDER:
+    // Instead of uploading to Cloudflare R2 or Backblaze B2,
+    // we simulate a successful upload and return a fake URL.
+    const fakeStorageUrl = `https://example-bucket.fake-storage.com/${filename}`;
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Invalid JSON body" })
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: true,
+        message: "File routed to storage successfully (placeholder).",
+        storageUrl: fakeStorageUrl
+      })
+    };
+
+  } catch (error) {
+    console.error("storage-router error:", error);
+
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: false,
+        error: "Storage routing failed.",
+        details: error.message
+      })
     };
   }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "storage-router.js received your data!",
-      received: data
-    })
-  };
 };
