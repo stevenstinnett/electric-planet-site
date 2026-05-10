@@ -1,6 +1,6 @@
-const busboy = require("busboy");
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";import Busboy from "busboy";
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
