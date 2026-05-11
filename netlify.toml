@@ -1,5 +1,5 @@
 [build]
-  publish = "electricplan"
+  publish = "."
 
 [functions]
   node_bundler = "esbuild"
