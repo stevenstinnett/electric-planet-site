@@ -1,2 +1,9 @@
- publish = "electricplan"
- 
+[build]
+  publish = "electricplan"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["busboy"]
+  included_files = ["*.js"]
+  # THIS LINE IS THE FIX:
+  binary_media_types = ["*/*"]
