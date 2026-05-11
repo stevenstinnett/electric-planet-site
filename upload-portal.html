@@ -71,40 +71,33 @@
 <body>
     <div class="container">
         <h1>Electric Planet Upload Portal</h1>
+<form 
+    name="electric-planet-upload"
+    method="POST"
+    enctype="multipart/form-data"
+    action="/.netlify/functions/upload-handler">
 
-        <form 
-            name="electric-planet-upload"
-            method="POST"
-            data-netlify="true"
-            enctype="multipart/form-data"
-            netlify-honeypot="bot-field"
-            action="/.netlify/functions/upload-handler"
+    <label for="email">Your Email</label>
+    <input type="email" id="email" name="email" required>
 
-            <!-- REQUIRED HIDDEN INPUTS -->
-            <input type="hidden" name="form-name" value="electric-planet-upload">
-            <input type="hidden" name="file" value="file">
+    <label for="gps">GPS Coordinates</label>
+    <input type="text" id="gps" name="gps" placeholder="Latitude, Longitude" required>
 
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="email" required>
+    <label for="topic">Science Topic</label>
+    <input type="text" id="topic" name="topic" placeholder="River, geology, insects, weather..." required>
 
-            <label for="gps">GPS Coordinates</label>
-            <input type="text" id="gps" name="gps" placeholder="Latitude, Longitude" required>
+    <label for="notes">Optional Notes</label>
+    <textarea id="notes" name="notes" rows="4" placeholder="Anything you'd like to add..."></textarea>
 
-            <label for="topic">Science Topic</label>
-            <input type="text" id="topic" name="topic" placeholder="River, geology, insects, weather..." required>
+    <label for="file">Upload Photo</label>
+    <input type="file" id="file" name="file" accept="image/*" required>
 
-            <label for="notes">Optional Notes</label>
-            <textarea id="notes" name="notes" rows="4" placeholder="Anything you'd like to add..."></textarea>
-
-            <label for="file">Upload Photo</label>
-            <input type="file" id="file" name="file" accept="image/*" required>
-
-            <button type="submit">Submit</button>
-     </form>
+    <button type="submit">Submit</button>
+</form>
 
 <div id="statusBox"></div>
-
 <script src="script.js"></script>
+
 </body>
 </html>
 
